@@ -25,7 +25,7 @@ function parseFile(path = "") {
 
     out += inp.split("\n").map((line, i) => {
 
-        const tokens = line.split(/\s/).filter(t => t != "")
+        const tokens = line.split(/\s/).filter(t => t != "" && t != "\t" && t != "\r" && t != "")
         var lineOut = ""
 
         if (tokens[0] == "fn") {
@@ -54,7 +54,17 @@ function parseFile(path = "") {
             lineOut = `auto ${name} = [&](${args.join(",")}) {`;
 
         }
-        else if (tokens[0] == "#include") {
+        else if (tokens[0] == "var") {
+            const [before, value] = tokens.slice(1, tokens.length).filter(t => t != "").join(" ").split("=")
+            const [name, type] = before.split("#")
+            return `${type} ${name} = ${value}`
+        }
+        else if (tokens[0] == "const") {
+            const [before, value] = tokens.slice(1, tokens.length).filter(t => t != "").join(" ").split("=")
+            const [name, type] = before.split("#")
+            return `const ${type} ${name} = ${value}`
+        }
+        else if (tokens?.[0]?.[0] == "#") {
             global += line
             return ""
         }
