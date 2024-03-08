@@ -1,0 +1,12 @@
+#include <Windows.h>
+
+fn xy p1#int p2#float -> {
+    return p1 * p2;
+};
+
+fn hein -> {
+    string o = ">> hallo >>" + sf(xy(100, 10.3));
+    out(o);
+};
+
+hein();
