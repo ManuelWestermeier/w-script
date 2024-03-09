@@ -3,6 +3,11 @@ const fs = require("fs")
 const _path = require("path")
 var global = ""
 
+const globalImports = {
+    "fs": "std/fs.cpp",
+    "net": "std/net.cpp",
+}
+
 const inpPath = _path.join(__dirname, "code/index.w")
 const outPath = "C:\\Users\\Manuel Westermeier\\source\\repos\\cpp-server-script\\cpp-server-script.cpp"
 
@@ -74,10 +79,16 @@ function parseFile(path = "") {
             return `const ${type} ${name} = ${value}`
         }
         else if (tokens[0] == "imp") {
-            if (!fs.existsSync(_path.join(dir, tokens[1]))) {
-                return log(`import file doesn't exists : ${path}:${i} -> '${line}'`)
+            if (globalImports?.[tokens[1]]) {
+                global += fs.readFileSync(globalImports?.[tokens[1]], "utf-8")
+                return ""
+            } else {
+                var impPath = _path.join(dir, tokens[1])
+                if (!fs.existsSync(impPath)) {
+                    return log(`import file doesn't exists : ${path}:${i} -> '${line}'`)
+                }
+                return parseFile(impPath);
             }
-            return parseFile(_path.join(dir, tokens[1]));
         }
         else if (tokens?.[0]?.[0] == "#") {
             global += line
