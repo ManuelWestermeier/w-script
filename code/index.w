@@ -6,4 +6,4 @@ imp functions.w
 imp object.w
 imp var_const.w
 
-out(">> hallo >>" + sf(multiplyIntFloat(100, 10.3)));
+log(">> nice >> " + sf((int)multiply(100, 10.3)));

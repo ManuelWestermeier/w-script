@@ -3,16 +3,13 @@
 
 using namespace std;
 
-void out(string data)
-{
-    cout << data << endl;
-}
-
 #define str string
 #define txt string
 #define num float
 #define sf to_string
-#define log out
-#define print out
+
+void out(str data) { cout << data << endl; }
+void print(str data) { cout << data << endl; }
+void log(str data) { cout << data << endl; }
 
 // Manuel Westermeier

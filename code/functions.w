@@ -3,12 +3,12 @@
 //code...
 //};
 
-fn multiplyIntFloat p1#int p2#float -> {
+fn multiply p1#num p2#num -> {
     return p1 * p2;
 };
 
 //functions without arguments
 
-fn log -> {
+fn xxx -> {
 
 };
