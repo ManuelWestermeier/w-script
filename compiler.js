@@ -1,26 +1,35 @@
 const { log } = require("console")
 const fs = require("fs")
-const path = require("path")
+const _path = require("path")
 var global = ""
 
-const inpPath = "index.code"
+const inpPath = _path.join(__dirname, "code/index.w")
 const outPath = "C:\\Users\\Manuel Westermeier\\source\\repos\\cpp-server-script\\cpp-server-script.cpp"
 
 const parsed = parseFile(inpPath)
 
-fs.writeFileSync(outPath,
-    `${fs.readFileSync("std.cpp", "utf-8")}
+//setInterval(Update)
+
+function Update() {
+    console.clear()
+    fs.writeFileSync(outPath,
+        `${fs.readFileSync("std/std.cpp", "utf-8")}
 ${global}
 int main(int argc, char* argv[]) {
     //user from code
     ${parsed}
     //usercode end
 }`
-    , "utf-8")
+        , "utf-8")
+    log("[compiled]")
+}
+
+Update()
 
 function parseFile(path = "") {
 
     const inp = fs.readFileSync(path, "utf-8").replace(/\r/, "")
+    const dir = _path.dirname(path)
     var out = ""
 
     out += inp.split("\n").map((line, i) => {
@@ -64,6 +73,12 @@ function parseFile(path = "") {
             const [name, type] = before.split("#")
             return `const ${type} ${name} = ${value}`
         }
+        else if (tokens[0] == "imp") {
+            if (!fs.existsSync(_path.join(dir, tokens[1]))) {
+                return log(`import file doesn't exists : ${path}:${i} -> '${line}'`)
+            }
+            return parseFile(_path.join(dir, tokens[1]));
+        }
         else if (tokens?.[0]?.[0] == "#") {
             global += line
             return ""
@@ -77,3 +92,5 @@ function parseFile(path = "") {
     return out;
 
 }
+
+process.on("uncaughtException", err => log(err))
